@@ -7,7 +7,7 @@ body{
 
 
 #titleScreen{
-    margin-top:100px;
+    margin-top:80px;
 }
 
 
@@ -24,8 +24,14 @@ h1{
 button{
     font-size:20px;
     padding:10px 30px;
-    cursor:pointer;
 }
+
+
+#gameScreen{
+    display:none;
+}
+
+
 #game{
 
     display:grid;
