@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,18 +22,15 @@
             <span id="keyDisplay" style="margin-left: 20px; font-size: 0.8em; color: #aaa;"></span>
         </h2>
 
+        <!-- ゲーム盤面 -->
         <div id="game"></div>
 
-        <!-- 十字キー配置の操作ボタン -->
+        <!-- 十字キー操作ボタン -->
         <div id="controls">
-            <div class="row">
-                <button onclick="movePlayer('up')">⬆️</button>
-            </div>
-            <div class="row">
-                <button onclick="movePlayer('left')">⬅️</button>
-                <button onclick="movePlayer('down')">⬇️</button>
-                <button onclick="movePlayer('right')">➡️</button>
-            </div>
+            <button onclick="movePlayer('up')" class="btn-up">⬆️</button>
+            <button onclick="movePlayer('left')" class="btn-left">⬅️</button>
+            <button onclick="movePlayer('down')" class="btn-down">⬇️</button>
+            <button onclick="movePlayer('right')" class="btn-right">➡️</button>
         </div>
 
         <!-- 次ステージボタン -->
