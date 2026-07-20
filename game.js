@@ -1,5 +1,4 @@
- const map = [
-
+const map = [
 "##########",
 "#........#",
 "#..###...#",
@@ -7,21 +6,15 @@
 "#..###..E#",
 "#........#",
 "##########"
-
 ];
 
-
 const game = document.getElementById("game");
-
 
 let playerX = 1;
 let playerY = 1;
 
-
-// ヘビの初期位置
-let snakeX = 8;
+let snakeX = 7;
 let snakeY = 5;
-
 
 let gameOver = false;
 
@@ -35,10 +28,7 @@ function startGame(){
 
     draw();
 
-
-    // ヘビ移動開始
-
-    setInterval(moveSnake,1000);
+    setInterval(moveSnake,1500);
 
 }
 
@@ -52,9 +42,7 @@ function draw(){
 
     for(let y=0; y<map.length; y++){
 
-
         for(let x=0; x<map[y].length; x++){
-
 
             const cell=document.createElement("div");
 
@@ -66,19 +54,16 @@ function draw(){
                 cell.textContent="🌳";
 
             }
-
             else if(x === playerX && y === playerY){
 
                 cell.textContent="🙂";
 
             }
-
             else if(x === snakeX && y === snakeY){
 
                 cell.textContent="🐍";
 
             }
-
             else if(map[y][x] === "E"){
 
                 cell.textContent="🌿";
@@ -98,54 +83,29 @@ function draw(){
 
 
 
-// 主人公移動
-
 function movePlayer(direction){
 
-
-    if(gameOver){
-        return;
-    }
+    if(gameOver) return;
 
 
-    let moveX = 0;
-    let moveY = 0;
+    let x = playerX;
+    let y = playerY;
 
 
-
-    if(direction==="up"){
-        moveY=-1;
-    }
-
-    if(direction==="down"){
-        moveY=1;
-    }
-
-    if(direction==="left"){
-        moveX=-1;
-    }
-
-    if(direction==="right"){
-        moveX=1;
-    }
+    if(direction==="up") y--;
+    if(direction==="down") y++;
+    if(direction==="left") x--;
+    if(direction==="right") x++;
 
 
 
-    const nextX = playerX + moveX;
-    const nextY = playerY + moveY;
+    if(map[y][x] !== "#"){
 
-
-
-    if(map[nextY][nextX] !== "#"){
-
-        playerX = nextX;
-        playerY = nextY;
-
+        playerX = x;
+        playerY = y;
 
         draw();
 
-
-        checkGoal();
         checkSnake();
 
     }
@@ -155,95 +115,42 @@ function movePlayer(direction){
 
 
 
-
-// ヘビ移動
-
 function moveSnake(){
 
+    if(gameOver) return;
 
-    if(gameOver){
-        return;
+
+    if(playerX > snakeX){
+        snakeX++;
     }
-
-
-
-    let dx = playerX - snakeX;
-    let dy = playerY - snakeY;
-
-
-
-    if(Math.abs(dx) > Math.abs(dy)){
-
-
-        snakeX += dx > 0 ? 1 : -1;
-
-
-    }else{
-
-
-        snakeY += dy > 0 ? 1 : -1;
-
-
+    else if(playerX < snakeX){
+        snakeX--;
     }
-
+    else if(playerY > snakeY){
+        snakeY++;
+    }
+    else if(playerY < snakeY){
+        snakeY--;
+    }
 
 
     draw();
 
     checkSnake();
 
-
 }
 
 
 
-
-// ヘビに捕まったか
 
 function checkSnake(){
 
-
     if(playerX === snakeX && playerY === snakeY){
 
-
         gameOver = true;
 
-
-        setTimeout(()=>{
-
-            alert("🐍 GAME OVER\nヘビにつかまった！");
-
-        },100);
-
+        alert("🐍 GAME OVER\nヘビにつかまった！");
 
     }
-
-
-}
-
-
-
-
-
-// ゴール判定
-
-function checkGoal(){
-
-
-    if(map[playerY][playerX] === "E"){
-
-
-        gameOver = true;
-
-
-        setTimeout(()=>{
-
-            alert("🎉 STAGE CLEAR!\n森を抜けた！");
-
-        },100);
-
-
-    }
-
 
 }
