@@ -122,7 +122,43 @@ document.addEventListener("keydown", function(e){
         playerX = nextX;
         playerY = nextY;
 
+    function movePlayer(direction){
+
+    let moveX = 0;
+    let moveY = 0;
+
+
+    if(direction==="up"){
+        moveY=-1;
+    }
+
+    if(direction==="down"){
+        moveY=1;
+    }
+
+    if(direction==="left"){
+        moveX=-1;
+    }
+
+    if(direction==="right"){
+        moveX=1;
+    }
+
+
+    const nextX = playerX + moveX;
+    const nextY = playerY + moveY;
+
+
+    if(map[nextY][nextX] !== "#"){
+
+        playerX = nextX;
+        playerY = nextY;
+
         draw();
+
+    }
+
+    }
 
     }
 
