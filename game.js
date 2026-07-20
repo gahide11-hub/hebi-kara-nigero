@@ -26,35 +26,43 @@ let gameOver = false;
 
 function getStageData(){
 
-    if(stage === 1){
+    if(stage===1){
 
         return {
+
             width:12,
             height:9,
             snakeCount:1
+
         };
 
     }
 
 
-    if(stage === 2){
+    if(stage===2){
 
         return {
-            width:15,
-            height:11,
+
+            width:14,
+            height:10,
             snakeCount:2
+
         };
 
     }
 
 
     return {
+
         width:18,
         height:13,
         snakeCount:3
+
     };
 
+
 }
+
 
 
 
@@ -65,6 +73,7 @@ function getStageData(){
 // =======================
 
 function startGame(){
+
 
     document
     .getElementById("titleScreen")
@@ -87,7 +96,10 @@ function startGame(){
 
     draw();
 
+
 }
+
+
 
 
 
@@ -125,19 +137,26 @@ function createMap(){
     map=[];
 
 
+
     // 全部森
 
     for(let y=0;y<data.height;y++){
 
+
         let row="";
+
 
         for(let x=0;x<data.width;x++){
 
+
             row+="#";
+
 
         }
 
+
         map.push(row);
+
 
     }
 
@@ -153,8 +172,6 @@ function createMap(){
 
 
 
-    // 一本道を確保
-
     createMainPath(
         playerX,
         playerY,
@@ -164,13 +181,9 @@ function createMap(){
 
 
 
-    // 追加の道
-
     createExtraRoads(data);
 
 
-
-    // ゴール
 
     map[goalY]=replaceTile(
         map[goalY],
@@ -213,21 +226,30 @@ function createMainPath(x,y,gx,gy){
             x!==gx
         ){
 
+
             x += x<gx ? 1 : -1;
+
 
         }
         else if(y!==gy){
 
+
             y += y<gy ? 1 : -1;
+
 
         }
 
 
+
         openCell(x,y);
+
 
     }
 
+
 }
+
+
 
 
 
@@ -240,8 +262,7 @@ function createMainPath(x,y,gx,gy){
 function createExtraRoads(data){
 
 
-    let count =
-    stage * 8;
+    let count=stage*8;
 
 
 
@@ -274,6 +295,7 @@ function createExtraRoads(data){
             let ny=y;
 
 
+
             if(dir===0) nx++;
             if(dir===1) nx--;
             if(dir===2) ny++;
@@ -288,7 +310,9 @@ function createExtraRoads(data){
                 ny<data.height-1
             ){
 
+
                 openCell(nx,ny);
+
 
             }
 
@@ -300,7 +324,6 @@ function createExtraRoads(data){
 
 
 }
-
 
 
 
@@ -328,13 +351,6 @@ function replaceTile(row,index,value){
     +row.substring(index+1);
 
 }
-
-
-
-
-
-
-
 // =======================
 // ヘビ配置
 // =======================
@@ -347,17 +363,36 @@ function createSnakes(data){
     let candidates=[];
 
 
+
     for(let y=1;y<data.height-1;y++){
 
+
         for(let x=1;x<data.width-1;x++){
+
 
 
             if(map[y][x]==="."){
 
 
+
+                // スタート付近除外
+
                 if(
                     Math.abs(x-playerX)<=2 &&
                     Math.abs(y-playerY)<=2
+                ){
+
+                    continue;
+
+                }
+
+
+
+                // ゴール付近除外
+
+                if(
+                    Math.abs(x-(data.width-2))<=1 &&
+                    Math.abs(y-(data.height-2))<=1
                 ){
 
                     continue;
@@ -379,32 +414,10 @@ function createSnakes(data){
 
         }
 
+
     }
 
 
-
-    // ゴール付近除外
-
-    candidates =
-    candidates.filter(pos=>{
-
-
-        return !(
-            Math.abs(
-                pos.x-(data.width-2)
-            )<=1
-            &&
-            Math.abs(
-                pos.y-(data.height-2)
-            )<=1
-        );
-
-
-    });
-
-
-
-    // シャッフル
 
     candidates.sort(
         ()=>Math.random()-0.5
@@ -418,7 +431,9 @@ function createSnakes(data){
         i++
     ){
 
+
         if(candidates[i]){
+
 
             snakes.push({
 
@@ -428,16 +443,27 @@ function createSnakes(data){
 
             });
 
+
         }
+
 
     }
 
+
 }
+
+
+
+
+
+
+
 // =======================
 // 描画
 // =======================
 
 function draw(){
+
 
     game.innerHTML="";
 
@@ -449,10 +475,12 @@ function draw(){
     `repeat(${data.width},40px)`;
 
 
+
     for(let y=0;y<map.length;y++){
 
 
         for(let x=0;x<map[y].length;x++){
+
 
 
             const cell=document.createElement("div");
@@ -483,6 +511,7 @@ function draw(){
 
 
                 let snakeHere=false;
+
 
 
                 for(let snake of snakes){
@@ -528,7 +557,9 @@ function draw(){
 
         }
 
+
     }
+
 
 }
 
@@ -625,8 +656,8 @@ function movePlayer(direction){
 
     }
 
-}
 
+}
 
 
 
@@ -648,13 +679,12 @@ function moveSnakes(){
 
     }
 
+
 }
 
-
-
-
-
-
+// =======================
+// ヘビAI
+// =======================
 
 function moveSnake(snake){
 
@@ -670,49 +700,70 @@ function moveSnake(snake){
 
 
 
-    moves.sort((a,b)=>{
+    // STAGE2は少しランダム性を入れる
+
+    if(
+        stage===2 &&
+        Math.random()<0.3
+    ){
 
 
-        let da =
-        Math.abs(
-            playerX-(snake.x+a[0])
-        )
-        +
-        Math.abs(
-            playerY-(snake.y+a[1])
+        moves.sort(
+            ()=>Math.random()-0.5
         );
 
 
-
-        let db =
-        Math.abs(
-            playerX-(snake.x+b[0])
-        )
-        +
-        Math.abs(
-            playerY-(snake.y+b[1])
-        );
+    }
+    else{
 
 
+        // プレイヤーへ近づく順
 
-        return da-db;
-
-
-    });
+        moves.sort((a,b)=>{
 
 
+            let da =
+            Math.abs(
+                playerX-(snake.x+a[0])
+            )
+            +
+            Math.abs(
+                playerY-(snake.y+a[1])
+            );
 
 
 
-    for(let move of moves){
+            let db =
+            Math.abs(
+                playerX-(snake.x+b[0])
+            )
+            +
+            Math.abs(
+                playerY-(snake.y+b[1])
+            );
+
+
+
+            return da-db;
+
+
+        });
+
+
+    }
+
+
+
+
+    for(let m of moves){
 
 
         let nx =
-        snake.x + move[0];
+        snake.x+m[0];
 
 
         let ny =
-        snake.y + move[1];
+        snake.y+m[1];
 
 
 
@@ -766,6 +817,7 @@ function checkSnake(){
 
             setTimeout(()=>{
 
+
                 alert(
                     "🐍 GAME OVER\nヘビにつかまった！"
                 );
@@ -811,6 +863,7 @@ function checkGoal(){
 
 
     }
+
 
 }
 
