@@ -1,13 +1,11 @@
 const map = [
-
 "##########",
-"#P.......#",
+"#........#",
 "#..###...#",
 "#........#",
 "#..###..E#",
 "#........#",
 "##########"
-
 ];
 
 
@@ -16,7 +14,6 @@ const game = document.getElementById("game");
 
 let playerX = 1;
 let playerY = 1;
-
 
 
 function startGame(){
@@ -30,7 +27,6 @@ function startGame(){
 }
 
 
-
 function draw(){
 
     game.innerHTML="";
@@ -38,9 +34,7 @@ function draw(){
 
     for(let y=0; y<map.length; y++){
 
-
         for(let x=0; x<map[y].length; x++){
-
 
             const cell=document.createElement("div");
 
@@ -52,13 +46,11 @@ function draw(){
                 cell.textContent="🌳";
 
             }
-
             else if(x===playerX && y===playerY){
 
                 cell.textContent="🙂";
 
             }
-
             else if(map[y][x]=="E"){
 
                 cell.textContent="🌿";
@@ -75,54 +67,9 @@ function draw(){
 }
 
 
+// スマホボタン操作
 
-// キー操作
-
-document.addEventListener("keydown", function(e){
-
-
-    let moveX = 0;
-    let moveY = 0;
-
-
-    if(e.key==="ArrowUp"){
-
-        moveY=-1;
-
-    }
-
-    if(e.key==="ArrowDown"){
-
-        moveY=1;
-
-    }
-
-    if(e.key==="ArrowLeft"){
-
-        moveX=-1;
-
-    }
-
-    if(e.key==="ArrowRight"){
-
-        moveX=1;
-
-    }
-
-
-    const nextX = playerX + moveX;
-    const nextY = playerY + moveY;
-
-
-
-    // 木じゃなければ移動
-
-    if(map[nextY][nextX] !== "#"){
-
-        playerX = nextX;
-        playerY = nextY;
-
-    function movePlayer(direction){
+function movePlayer(direction){
 
     let moveX = 0;
     let moveY = 0;
@@ -158,9 +105,4 @@ document.addEventListener("keydown", function(e){
 
     }
 
-    }
-
-    }
-
-
-});
+}
