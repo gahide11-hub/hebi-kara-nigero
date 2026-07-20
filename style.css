@@ -1,122 +1,27 @@
-body{
-
-    background:#202020;
-    color:white;
-    font-family:monospace;
-    text-align:center;
-
+/* ボタンの配置を整える */
+#controls {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column; /* 縦並びのベースを作る */
+    align-items: center;    /* 中央寄せ */
 }
 
-
-
-#titleScreen{
-
-    margin-top:80px;
-
+/* どでかいボタンの設定 */
+#controls button {
+    font-size: 70px;       /* 絵文字も大きく */
+    width: 130px;          /* 幅をどでかく！ */
+    height: 130px;         /* 高さをどでかく！ */
+    margin: 8px;           /* 隙間を少し詰めて押しやすく */
+    border-radius: 30px;   /* 角丸で柔らかい押し心地に */
+    border: none;          /* 枠線を消してスッキリ */
+    background: #444;      /* ボタンらしい色 */
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation; /* 重要：スマホでタップの遅延を防ぐ */
 }
 
-
-
-h1{
-
-    font-size:36px;
-
-}
-
-
-
-button{
-
-    font-size:20px;
-    padding:10px 20px;
-
-}
-
-
-
-#gameScreen{
-
-    display:none;
-
-}
-
-
-
-#game{
-
-    display:grid;
-
-    grid-auto-columns:40px;
-
-    grid-auto-rows:40px;
-
-    gap:2px;
-
-    justify-content:center;
-
-    margin-top:30px;
-
-}
-
-
-
-.cell{
-
-    width:40px;
-
-    height:40px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:25px;
-
-}
-
-
-
-
-
-#controls{
-
-    margin-top:25px;
-
-}
-
-
-
-#controls button{
-
-    font-size:60px;
-
-    width:90px;
-
-    height:90px;
-
-    margin:10px;
-
-    border-radius:20px;
-
-}
-
-
-
-
-
-
-#nextStage{
-
-    margin-top:30px;
-
-}
-
-
-
-#message{
-
-    height:20px;
-
+/* ボタンを押したときの色変化（タップ感が出る） */
+#controls button:active {
+    background: #666;
+    transform: scale(0.95); /* 押したときに少し沈む演出 */
 }
