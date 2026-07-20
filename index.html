@@ -18,15 +18,17 @@
     <div id="gameScreen" style="display:none;">
         <h2>
             🌲 STAGE <span id="stageText">1</span>
-            <span id="keyDisplay" style="margin-left: 20px; font-size: 0.8em; color: #555;"></span>
+            <span id="keyDisplay" style="margin-left: 20px; font-size: 0.8em; color: #aaa;"></span>
         </h2>
 
         <div id="game"></div>
 
-        <!-- 操作ボタン -->
+        <!-- 十字キー配置の操作ボタン -->
         <div id="controls">
-            <button onclick="movePlayer('up')">⬆️</button><br>
-            <div>
+            <div class="row">
+                <button onclick="movePlayer('up')">⬆️</button>
+            </div>
+            <div class="row">
                 <button onclick="movePlayer('left')">⬅️</button>
                 <button onclick="movePlayer('down')">⬇️</button>
                 <button onclick="movePlayer('right')">➡️</button>
