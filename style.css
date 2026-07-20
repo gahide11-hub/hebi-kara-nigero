@@ -1,1 +1,28 @@
+body{
+    background:#202020;
+    color:white;
+    font-family:monospace;
+    text-align:center;
+}
 
+
+#titleScreen{
+    margin-top:100px;
+}
+
+
+.snake{
+    font-size:60px;
+}
+
+
+h1{
+    font-size:36px;
+}
+
+
+button{
+    font-size:20px;
+    padding:10px 30px;
+    cursor:pointer;
+}
