@@ -1,6 +1,4 @@
-console.log("game.js読み込み成功");
-            const map = [
-
+const map = [
 "##########",
 "#........#",
 "#..###...#",
@@ -8,18 +6,14 @@ console.log("game.js読み込み成功");
 "#..###..E#",
 "#........#",
 "##########"
-
 ];
 
 
 const game = document.getElementById("game");
 
-
 let playerX = 1;
 let playerY = 1;
 
-const goalX = 8;
-const goalY = 4;
 
 function startGame(){
 
@@ -33,7 +27,6 @@ function startGame(){
 
 
 
-
 function draw(){
 
     game.innerHTML="";
@@ -41,28 +34,24 @@ function draw(){
 
     for(let y=0; y<map.length; y++){
 
-
         for(let x=0; x<map[y].length; x++){
-
 
             const cell=document.createElement("div");
 
             cell.className="cell";
 
 
-            if(map[y][x]=="#"){
+            if(map[y][x] === "#"){
 
                 cell.textContent="🌳";
 
             }
-
-            else if(x===playerX && y===playerY){
+            else if(x === playerX && y === playerY){
 
                 cell.textContent="🙂";
 
             }
-
-            else if(map[y][x]=="E"){
+            else if(map[y][x] === "E"){
 
                 cell.textContent="🌿";
 
@@ -73,26 +62,33 @@ function draw(){
 
         }
 
-    }function movePlayer(direction){
+    }
+
+}
+
+
+
+
+function movePlayer(direction){
 
     let moveX = 0;
     let moveY = 0;
 
 
-    if(direction==="up"){
-        moveY=-1;
+    if(direction === "up"){
+        moveY = -1;
     }
 
-    if(direction==="down"){
-        moveY=1;
+    if(direction === "down"){
+        moveY = 1;
     }
 
-    if(direction==="left"){
-        moveX=-1;
+    if(direction === "left"){
+        moveX = -1;
     }
 
-    if(direction==="right"){
-        moveX=1;
+    if(direction === "right"){
+        moveX = 1;
     }
 
 
@@ -100,37 +96,16 @@ function draw(){
     const nextY = playerY + moveY;
 
 
-    // 壁チェック
-
     if(map[nextY][nextX] !== "#"){
-
 
         playerX = nextX;
         playerY = nextY;
 
-
         draw();
 
-
-// ゴール判定
-
-if(playerX === goalX && playerY === goalY){
-
-    setTimeout(function(){
-
-        alert("🎉 STAGE CLEAR!\n\n森を抜けた！");
-
-    },100);
-
-}
-
-    }
-
     }
 
 }
-
-
 
 
 
