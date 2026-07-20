@@ -37,7 +37,7 @@ function getStageData() {
 }
 
 // =======================
-// マップ生成（木を散らす）
+// マップ生成
 // =======================
 function createMap() {
     const data = getStageData();
@@ -137,15 +137,13 @@ function createSnakes(data) {
     for (let i = 0; i < data.snakeCount; i++) { if (spots[i]) snakes.push({ x: spots[i].x, y: spots[i].y }); }
 }
 
-// 描画（盤面の一列崩れを防止する修正）
+// 描画（横幅と列数を固定して一列崩れを完全に防ぐ）
 function draw() {
     game.innerHTML = "";
     const data = getStageData();
     
-    // ★盤面を確実にグリッド表示にする設定
-    game.style.display = "grid";
-    game.style.gridTemplateColumns = `repeat(${data.width}, 40px)`;
-    game.style.width = `${data.width * 42}px`; // 幅を明示して折り返しを防止
+    // JS側で列数を直接指定
+    game.style.gridTemplateColumns = `repeat(${data.width}, 36px)`;
 
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
