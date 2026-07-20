@@ -1,19 +1,12 @@
 let map = [];
 const game = document.getElementById("game");
 
-// =======================
-// 状態
-// =======================
+// 状態管理
 let stage = 1;
-let playerX = 1;
-let playerY = 1;
-let snakes = [];
-let gameOver = false;
-
-let stageNeedsKey = false;
-let collectedKey = false;
-let keyX = -1;
-let keyY = -1;
+let playerX = 1, playerY = 1;
+let snakes = [], gameOver = false;
+let stageNeedsKey = false, collectedKey = false;
+let keyX = -1, keyY = -1;
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -23,17 +16,13 @@ function shuffleArray(array) {
     return array;
 }
 
-// =======================
-// UI更新
-// =======================
 function updateUI() {
     const stageEl = document.getElementById("stageText");
     const keyEl = document.getElementById("keyDisplay");
     if (stageEl) stageEl.textContent = stage;
     if (keyEl) {
-        if (!stageNeedsKey) {
-            keyEl.textContent = "";
-        } else {
+        if (!stageNeedsKey) keyEl.textContent = "";
+        else {
             keyEl.textContent = collectedKey ? "🔑 鍵ゲット！" : "🔑 鍵を探して！";
             keyEl.style.color = collectedKey ? "#d4af37" : "#555";
             keyEl.style.fontWeight = collectedKey ? "bold" : "normal";
@@ -41,9 +30,6 @@ function updateUI() {
     }
 }
 
-// =======================
-// ステージ・マップ生成
-// =======================
 function getStageData() {
     if (stage === 1) return { width: 12, height: 9, snakeCount: 1, roadRate: 0.6, hasKey: false };
     if (stage === 2) return { width: 15, height: 11, snakeCount: 1, roadRate: 0.55, hasKey: true };
@@ -53,7 +39,7 @@ function getStageData() {
 function createMap() {
     const data = getStageData();
     stageNeedsKey = data.hasKey; 
-    collectedKey = !data.hasKey; // 鍵不要なら最初から true
+    collectedKey = !data.hasKey; 
     keyX = -1; keyY = -1;
 
     map = [];
@@ -72,9 +58,7 @@ function createMap() {
     draw();
 }
 
-// =======================
-// 生成系関数
-// =======================
+// マップ生成補助関数
 function createKey(data) {
     let spots = [];
     for (let y = 1; y < data.height - 1; y++) {
@@ -91,7 +75,7 @@ function createKey(data) {
 }
 
 function createForestRoad(data) {
-    let x = playerX; let y = playerY; let count = data.width * data.height * 3;
+    let x = playerX, y = playerY, count = data.width * data.height * 3;
     for (let i = 0; i < count; i++) {
         let dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
         shuffleArray(dirs);
@@ -120,11 +104,12 @@ function createSnakes(data) {
     snakes = []; let spots = [];
     for (let y = 1; y < data.height - 1; y++) {
         for (let x = 1; x < data.width - 1; x++) {
-            if (map[y][x] === ".") {
-                if (Math.abs(x - playerX) <= 2 && Math.abs(y - playerY) <= 2) continue;
-                if (Math.abs(x - (data.width - 2)) <= 1 && Math.abs(y - (data.height - 2)) <= 1) continue;
-                if (x === keyX && y === keyY) continue;
-                spots.push({ x: x, y: y });
+            if (map[y][x] === "." && !(x === keyX && y === keyY)) {
+                if (Math.abs(x - playerX) > 2 || Math.abs(y - playerY) > 2) {
+                    if (Math.abs(x - (data.width - 2)) > 1 || Math.abs(y - (data.height - 2)) > 1) {
+                        spots.push({ x: x, y: y });
+                    }
+                }
             }
         }
     }
@@ -132,9 +117,7 @@ function createSnakes(data) {
     for (let i = 0; i < data.snakeCount; i++) { if (spots[i]) snakes.push({ x: spots[i].x, y: spots[i].y }); }
 }
 
-// =======================
-// 描画
-// =======================
+// 描画とロジック
 function draw() {
     game.innerHTML = "";
     const data = getStageData();
@@ -149,7 +132,6 @@ function draw() {
                 let snakeHere = snakes.some(s => s.x === x && s.y === y);
                 if (snakeHere) cell.textContent = "🐍";
                 else if (stageNeedsKey && !collectedKey && x === keyX && y === keyY) cell.textContent = "🔑";
-                // ★ここがゴール描画の変更点
                 else if (map[y][x] === "E") cell.textContent = collectedKey ? "🏠" : "🔒";
             }
             game.appendChild(cell);
@@ -157,15 +139,12 @@ function draw() {
     }
 }
 
-// =======================
-// ゲーム処理
-// =======================
 function checkKey() {
     if (stageNeedsKey && playerX === keyX && playerY === keyY && !collectedKey) {
         collectedKey = true;
         keyX = -1; keyY = -1;
         updateUI();
-        draw(); // 鍵を取った瞬間にゴールを🏠に変えるため再描画
+        draw();
     }
 }
 
@@ -177,11 +156,11 @@ function checkGoal() {
     }
 }
 
-function movePlayer(direction) {
+function movePlayer(dir) {
     if (gameOver) return;
     let nx = playerX, ny = playerY;
-    if (direction === "up") ny--; if (direction === "down") ny++;
-    if (direction === "left") nx--; if (direction === "right") nx++;
+    if (dir === "up") ny--; if (dir === "down") ny++;
+    if (dir === "left") nx--; if (dir === "right") nx++;
     if (map[ny] && map[ny][nx] !== "#") {
         playerX = nx; playerY = ny;
         checkKey();
