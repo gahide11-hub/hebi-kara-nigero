@@ -140,10 +140,7 @@ function movePlayer(direction){
 
         },100);
 
+    
+
     }
-
-                
-    }
-
-
 }
