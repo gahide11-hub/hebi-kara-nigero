@@ -100,4 +100,141 @@ function movePlayer(direction){
     }
 
 
-    let x =
+    let x = playerX;
+    let y = playerY;
+
+
+    if(direction === "up"){
+        y--;
+    }
+
+    if(direction === "down"){
+        y++;
+    }
+
+    if(direction === "left"){
+        x--;
+    }
+
+    if(direction === "right"){
+        x++;
+    }
+
+
+
+    // 壁チェック
+
+    if(map[y][x] !== "#"){
+
+
+        playerX = x;
+        playerY = y;
+
+
+        // プレイヤーが動いたらヘビも動く
+
+        moveSnake();
+
+
+        draw();
+
+
+        checkSnake();
+
+        checkGoal();
+
+
+    }
+
+}
+
+
+
+
+
+// ヘビ移動
+
+function moveSnake(){
+
+
+    if(gameOver){
+        return;
+    }
+
+
+
+    if(playerX > snakeX){
+
+        snakeX++;
+
+    }
+    else if(playerX < snakeX){
+
+        snakeX--;
+
+    }
+    else if(playerY > snakeY){
+
+        snakeY++;
+
+    }
+    else if(playerY < snakeY){
+
+        snakeY--;
+
+    }
+
+
+}
+
+
+
+
+
+// ヘビに捕まったか確認
+
+function checkSnake(){
+
+
+    if(playerX === snakeX && playerY === snakeY){
+
+
+        gameOver = true;
+
+
+        setTimeout(function(){
+
+            alert("🐍 GAME OVER\nヘビにつかまった！");
+
+        },100);
+
+
+    }
+
+}
+
+
+
+
+
+// ゴール確認
+
+function checkGoal(){
+
+
+    if(map[playerY][playerX] === "E"){
+
+
+        gameOver = true;
+
+
+        setTimeout(function(){
+
+            alert("🎉 STAGE CLEAR!\n森を抜けた！");
+
+        },100);
+
+
+    }
+
+}
