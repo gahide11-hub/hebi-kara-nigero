@@ -18,7 +18,8 @@ const game = document.getElementById("game");
 let playerX = 1;
 let playerY = 1;
 
-
+const goalX = 8;
+const goalY = 4;
 
 function startGame(){
 
@@ -111,17 +112,17 @@ function draw(){
         draw();
 
 
-        // ゴールチェック
+// ゴール判定
 
-        if(map[playerY][playerX] === "E"){
+if(playerX === goalX && playerY === goalY){
 
-            setTimeout(()=>{
+    setTimeout(function(){
 
-                alert("🎉 STAGE CLEAR!\n\n森を抜けた！");
+        alert("🎉 STAGE CLEAR!\n\n森を抜けた！");
 
-            },100);
+    },100);
 
-        }
+}
 
     }
 
