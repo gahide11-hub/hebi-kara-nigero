@@ -1,4 +1,4 @@
-
+console.log("game.js読み込み成功");
             const map = [
 
 "##########",
