@@ -31,14 +31,13 @@ function updateUI() {
 }
 
 function getStageData() {
-    // density: 木を散らす密度
     if (stage === 1) return { width: 12, height: 9, snakeCount: 1, density: 0.35, hasKey: false };
     if (stage === 2) return { width: 15, height: 11, snakeCount: 1, density: 0.4, hasKey: true };
     return { width: 18, height: 13, snakeCount: 2, density: 0.45, hasKey: true };
 }
 
 // =======================
-// マップ生成（木を分散して配置）
+// マップ生成（木を散らす）
 // =======================
 function createMap() {
     const data = getStageData();
@@ -46,7 +45,6 @@ function createMap() {
     collectedKey = !data.hasKey; 
     keyX = -1; keyY = -1;
 
-    // 1. 全体を空き地で初期化し、外枠だけ木にする
     map = [];
     for (let y = 0; y < data.height; y++) {
         let row = new Array(data.width).fill(".");
@@ -59,20 +57,15 @@ function createMap() {
     playerX = 1; playerY = 1;
     const goalX = data.width - 2; const goalY = data.height - 2;
 
-    // 2. ゴールへの最短ルートを保護（印をつける）
     makeGoalPath(goalX, goalY);
-
-    // 3. 木が固まらないように分散配置
     populateTreesDispersed(data.density);
 
-    // 4. 配置完了後、保護していた印(P)を空き地(.)に戻す
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
             if (map[y][x] === "P") map[y][x] = ".";
         }
     }
 
-    // 5. ゴール、鍵、ヘビを配置
     map[goalY][goalX] = "E";
     if (stageNeedsKey) createKey(data);
     createSnakes(data);
@@ -91,7 +84,6 @@ function makeGoalPath(gx, gy) {
     map[gy][gx] = "P";
 }
 
-// 木同士が隣り合いにくく散らす関数
 function populateTreesDispersed(density) {
     let candidates = [];
     for (let y = 1; y < map.length - 1; y++) {
@@ -105,7 +97,6 @@ function populateTreesDispersed(density) {
 
     for (let pos of candidates) {
         if (Math.random() < density) {
-            // 周囲8マスにすでに木が2個以上あったら置かない（密集防止）
             let nearTreeCount = 0;
             for (let dy = -1; dy <= 1; dy++) {
                 for (let dx = -1; dx <= 1; dx++) {
@@ -146,11 +137,16 @@ function createSnakes(data) {
     for (let i = 0; i < data.snakeCount; i++) { if (spots[i]) snakes.push({ x: spots[i].x, y: spots[i].y }); }
 }
 
-// 描画
+// 描画（盤面の一列崩れを防止する修正）
 function draw() {
     game.innerHTML = "";
     const data = getStageData();
+    
+    // ★盤面を確実にグリッド表示にする設定
+    game.style.display = "grid";
     game.style.gridTemplateColumns = `repeat(${data.width}, 40px)`;
+    game.style.width = `${data.width * 42}px`; // 幅を明示して折り返しを防止
+
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
             const cell = document.createElement("div");
