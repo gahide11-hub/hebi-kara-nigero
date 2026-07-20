@@ -72,75 +72,64 @@ function draw(){
 
         }
 
-    }
+    }function movePlayer(direction){
 
-}
-
-
-
-
-
-function movePlayer(direction){
-
-
-    let moveX=0;
-    let moveY=0;
-
+    let moveX = 0;
+    let moveY = 0;
 
 
     if(direction==="up"){
-
         moveY=-1;
-
     }
-
 
     if(direction==="down"){
-
         moveY=1;
-
     }
-
 
     if(direction==="left"){
-
         moveX=-1;
-
     }
-
 
     if(direction==="right"){
-
         moveX=1;
-
     }
 
 
-
-    const nextX=playerX+moveX;
-    const nextY=playerY+moveY;
-
+    const nextX = playerX + moveX;
+    const nextY = playerY + moveY;
 
 
-    // 森の外・木には入れない
+    // 壁チェック
 
     if(map[nextY][nextX] !== "#"){
 
-        playerX=nextX;
-        playerY=nextY;
+
+        playerX = nextX;
+        playerY = nextY;
+
 
         draw();
-    // ゴール到達チェック
 
-    if(map[playerY][playerX] === "E"){
 
-        setTimeout(function(){
+        // ゴールチェック
 
-            alert("🎉 STAGE CLEAR!\n\n森を抜けた！");
+        if(map[playerY][playerX] === "E"){
 
-        },100);
+            setTimeout(()=>{
 
-    
+                alert("🎉 STAGE CLEAR!\n\n森を抜けた！");
+
+            },100);
+
+        }
 
     }
+
+    }
+
 }
+
+
+
+
+
