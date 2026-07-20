@@ -31,14 +31,14 @@ function updateUI() {
 }
 
 function getStageData() {
-    // density: 木を散らす密度（値が大きいほど木が増える）
+    // density: 木を散らす密度
     if (stage === 1) return { width: 12, height: 9, snakeCount: 1, density: 0.35, hasKey: false };
     if (stage === 2) return { width: 15, height: 11, snakeCount: 1, density: 0.4, hasKey: true };
     return { width: 18, height: 13, snakeCount: 2, density: 0.45, hasKey: true };
 }
 
 // =======================
-// マップ生成（木を散らすロジック版）
+// マップ生成（木を分散して配置）
 // =======================
 function createMap() {
     const data = getStageData();
@@ -62,7 +62,7 @@ function createMap() {
     // 2. ゴールへの最短ルートを保護（印をつける）
     makeGoalPath(goalX, goalY);
 
-    // 3. 木が固まらないように分散配置！
+    // 3. 木が固まらないように分散配置
     populateTreesDispersed(data.density);
 
     // 4. 配置完了後、保護していた印(P)を空き地(.)に戻す
@@ -91,7 +91,7 @@ function makeGoalPath(gx, gy) {
     map[gy][gx] = "P";
 }
 
-// ★木同士が隣り合いにくく散らす関数
+// 木同士が隣り合いにくく散らす関数
 function populateTreesDispersed(density) {
     let candidates = [];
     for (let y = 1; y < map.length - 1; y++) {
