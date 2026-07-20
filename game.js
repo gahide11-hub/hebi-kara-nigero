@@ -137,18 +137,27 @@ function createSnakes(data) {
     for (let i = 0; i < data.snakeCount; i++) { if (spots[i]) snakes.push({ x: spots[i].x, y: spots[i].y }); }
 }
 
-// 描画（横幅と列数を固定して一列崩れを完全に防ぐ）
+// 描画（画面サイズに合わせて1マスの大きさを自動調整）
 function draw() {
     game.innerHTML = "";
     const data = getStageData();
-    
-    // JS側で列数を直接指定
-    game.style.gridTemplateColumns = `repeat(${data.width}, 36px)`;
+
+    // 画面横幅に合わせてマス目サイズ（cellSize）を動的に計算
+    const availableWidth = Math.min(window.innerWidth - 20, 600); // 画面幅から余白を引く
+    let cellSize = Math.floor(availableWidth / data.width) - 2;
+    cellSize = Math.min(Math.max(cellSize, 18), 40); // 18px〜40pxの範囲に収める
+    const fontSize = Math.floor(cellSize * 0.65); // アイコンサイズも自動縮小
+
+    game.style.gridTemplateColumns = `repeat(${data.width}, ${cellSize}px)`;
 
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
             const cell = document.createElement("div");
             cell.className = "cell";
+            cell.style.width = `${cellSize}px`;
+            cell.style.height = `${cellSize}px`;
+            cell.style.fontSize = `${fontSize}px`;
+
             if (map[y][x] === "#") cell.textContent = "🌳";
             else if (x === playerX && y === playerY) cell.textContent = "🙂";
             else {
@@ -238,6 +247,13 @@ function nextStage() {
     gameOver = false; document.getElementById("nextStage").style.display = "none";
     createMap();
 }
+
+// 画面サイズ変更時にも自動再計算して再描画
+window.addEventListener("resize", () => {
+    if (document.getElementById("gameScreen").style.display !== "none") {
+        draw();
+    }
+});
 
 document.addEventListener("keydown", function(e) {
     if (e.key === "ArrowUp") movePlayer("up");
