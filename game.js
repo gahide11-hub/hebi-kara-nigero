@@ -130,7 +130,19 @@ function movePlayer(direction){
         playerY=nextY;
 
         draw();
+    // ゴール到達チェック
 
+    if(map[playerY][playerX] === "E"){
+
+        setTimeout(function(){
+
+            alert("🎉 STAGE CLEAR!\n\n森を抜けた！");
+
+        },100);
+
+    }
+
+                
     }
 
 
