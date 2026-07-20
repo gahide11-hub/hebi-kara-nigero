@@ -1,4 +1,3 @@
-
 const map = [
 "##########",
 "#........#",
@@ -38,6 +37,7 @@ function startGame(){
 
 
 
+
 function draw(){
 
     game.innerHTML="";
@@ -59,19 +59,16 @@ function draw(){
                 cell.textContent="🌳";
 
             }
-
             else if(x === playerX && y === playerY){
 
                 cell.textContent="🙂";
 
             }
-
             else if(x === snakeX && y === snakeY){
 
                 cell.textContent="🐍";
 
             }
-
             else if(map[y][x] === "E"){
 
                 cell.textContent="🌿";
@@ -132,17 +129,31 @@ function movePlayer(direction){
         playerY = y;
 
 
-        // プレイヤーが動いたらヘビも動く
-
-        moveSnake();
-
-
         draw();
 
 
-        checkSnake();
-
         checkGoal();
+
+
+
+        // 0.5秒後にヘビ移動
+
+        setTimeout(function(){
+
+
+            if(gameOver){
+                return;
+            }
+
+
+            moveSnake();
+
+            draw();
+
+            checkSnake();
+
+
+        },500);
 
 
     }
@@ -153,7 +164,7 @@ function movePlayer(direction){
 
 
 
-// ヘビ移動
+// ヘビ移動（少し迷う）
 
 function moveSnake(){
 
@@ -164,24 +175,40 @@ function moveSnake(){
 
 
 
-    if(playerX > snakeX){
+    if(Math.random() < 0.5){
 
-        snakeX++;
+
+        // 横方向へ近づく
+
+        if(playerX > snakeX){
+
+            snakeX++;
+
+        }
+        else if(playerX < snakeX){
+
+            snakeX--;
+
+        }
+
 
     }
-    else if(playerX < snakeX){
+    else{
 
-        snakeX--;
 
-    }
-    else if(playerY > snakeY){
+        // 縦方向へ近づく
 
-        snakeY++;
+        if(playerY > snakeY){
 
-    }
-    else if(playerY < snakeY){
+            snakeY++;
 
-        snakeY--;
+        }
+        else if(playerY < snakeY){
+
+            snakeY--;
+
+        }
+
 
     }
 
