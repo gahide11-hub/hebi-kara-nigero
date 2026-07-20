@@ -24,32 +24,55 @@ function updateUI() {
         if (!stageNeedsKey) keyEl.textContent = "";
         else {
             keyEl.textContent = collectedKey ? "🔑 鍵ゲット！" : "🔑 鍵を探して！";
-            keyEl.style.color = collectedKey ? "#d4af37" : "#555";
+            keyEl.style.color = collectedKey ? "#d4af37" : "#aaa";
             keyEl.style.fontWeight = collectedKey ? "bold" : "normal";
         }
     }
 }
 
 function getStageData() {
-    if (stage === 1) return { width: 12, height: 9, snakeCount: 1, roadRate: 0.6, hasKey: false };
-    if (stage === 2) return { width: 15, height: 11, snakeCount: 1, roadRate: 0.55, hasKey: true };
-    return { width: 18, height: 13, snakeCount: 2, roadRate: 0.5, hasKey: true };
+    // density: 木を散らす密度（値が大きいほど木が増える）
+    if (stage === 1) return { width: 12, height: 9, snakeCount: 1, density: 0.35, hasKey: false };
+    if (stage === 2) return { width: 15, height: 11, snakeCount: 1, density: 0.4, hasKey: true };
+    return { width: 18, height: 13, snakeCount: 2, density: 0.45, hasKey: true };
 }
 
+// =======================
+// マップ生成（木を散らすロジック版）
+// =======================
 function createMap() {
     const data = getStageData();
     stageNeedsKey = data.hasKey; 
     collectedKey = !data.hasKey; 
     keyX = -1; keyY = -1;
 
+    // 1. 全体を空き地で初期化し、外枠だけ木にする
     map = [];
-    for (let y = 0; y < data.height; y++) map.push(new Array(data.width).fill("#"));
+    for (let y = 0; y < data.height; y++) {
+        let row = new Array(data.width).fill(".");
+        for (let x = 0; x < data.width; x++) {
+            if (y === 0 || y === data.height - 1 || x === 0 || x === data.width - 1) row[x] = "#";
+        }
+        map.push(row);
+    }
+    
     playerX = 1; playerY = 1;
     const goalX = data.width - 2; const goalY = data.height - 2;
 
-    openCell(playerX, playerY);
-    createForestRoad(data);
+    // 2. ゴールへの最短ルートを保護（印をつける）
     makeGoalPath(goalX, goalY);
+
+    // 3. 木が固まらないように分散配置！
+    populateTreesDispersed(data.density);
+
+    // 4. 配置完了後、保護していた印(P)を空き地(.)に戻す
+    for (let y = 0; y < map.length; y++) {
+        for (let x = 0; x < map[y].length; x++) {
+            if (map[y][x] === "P") map[y][x] = ".";
+        }
+    }
+
+    // 5. ゴール、鍵、ヘビを配置
     map[goalY][goalX] = "E";
     if (stageNeedsKey) createKey(data);
     createSnakes(data);
@@ -58,58 +81,64 @@ function createMap() {
     draw();
 }
 
-// マップ生成補助関数
+function makeGoalPath(gx, gy) {
+    let x = playerX, y = playerY;
+    while (x !== gx || y !== gy) {
+        map[y][x] = "P";
+        if (Math.random() < 0.5 && x !== gx) x += x < gx ? 1 : -1;
+        else if (y !== gy) y += y < gy ? 1 : -1;
+    }
+    map[gy][gx] = "P";
+}
+
+// ★木同士が隣り合いにくく散らす関数
+function populateTreesDispersed(density) {
+    let candidates = [];
+    for (let y = 1; y < map.length - 1; y++) {
+        for (let x = 1; x < map[y].length - 1; x++) {
+            if (map[y][x] === "." && !(x === playerX && y === playerY)) {
+                candidates.push({x: x, y: y});
+            }
+        }
+    }
+    shuffleArray(candidates);
+
+    for (let pos of candidates) {
+        if (Math.random() < density) {
+            // 周囲8マスにすでに木が2個以上あったら置かない（密集防止）
+            let nearTreeCount = 0;
+            for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                    if (map[pos.y + dy] && map[pos.y + dy][pos.x + dx] === "#") {
+                        nearTreeCount++;
+                    }
+                }
+            }
+
+            if (nearTreeCount < 2) {
+                map[pos.y][pos.x] = "#";
+            }
+        }
+    }
+}
+
 function createKey(data) {
     let spots = [];
     for (let y = 1; y < data.height - 1; y++) {
         for (let x = 1; x < data.width - 1; x++) {
-            if (map[y][x] === ".") {
-                if (Math.abs(x - playerX) <= 2 && Math.abs(y - playerY) <= 2) continue;
-                if (Math.abs(x - (data.width - 2)) <= 1 && Math.abs(y - (data.height - 2)) <= 1) continue;
-                spots.push({ x: x, y: y });
-            }
+            if (map[y][x] === ".") spots.push({ x: x, y: y });
         }
     }
     shuffleArray(spots);
     if (spots.length > 0) { keyX = spots[0].x; keyY = spots[0].y; }
 }
 
-function createForestRoad(data) {
-    let x = playerX, y = playerY, count = data.width * data.height * 3;
-    for (let i = 0; i < count; i++) {
-        let dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        shuffleArray(dirs);
-        for (let d of dirs) {
-            let nx = x + d[0], ny = y + d[1];
-            if (nx > 0 && ny > 0 && nx < data.width - 1 && ny < data.height - 1) {
-                if (Math.random() < data.roadRate) { x = nx; y = ny; openCell(x, y); break; }
-            }
-        }
-    }
-}
-
-function makeGoalPath(gx, gy) {
-    let x = playerX, y = playerY;
-    while (x !== gx || y !== gy) {
-        openCell(x, y);
-        if (Math.random() < 0.5 && x !== gx) x += x < gx ? 1 : -1;
-        else if (y !== gy) y += y < gy ? 1 : -1;
-    }
-    openCell(gx, gy);
-}
-
-function openCell(x, y) { map[y][x] = "."; }
-
 function createSnakes(data) {
     snakes = []; let spots = [];
     for (let y = 1; y < data.height - 1; y++) {
         for (let x = 1; x < data.width - 1; x++) {
             if (map[y][x] === "." && !(x === keyX && y === keyY)) {
-                if (Math.abs(x - playerX) > 2 || Math.abs(y - playerY) > 2) {
-                    if (Math.abs(x - (data.width - 2)) > 1 || Math.abs(y - (data.height - 2)) > 1) {
-                        spots.push({ x: x, y: y });
-                    }
-                }
+                 spots.push({ x: x, y: y });
             }
         }
     }
@@ -117,7 +146,7 @@ function createSnakes(data) {
     for (let i = 0; i < data.snakeCount; i++) { if (spots[i]) snakes.push({ x: spots[i].x, y: spots[i].y }); }
 }
 
-// 描画とロジック
+// 描画
 function draw() {
     game.innerHTML = "";
     const data = getStageData();
@@ -139,20 +168,18 @@ function draw() {
     }
 }
 
+// ゲーム処理
 function checkKey() {
     if (stageNeedsKey && playerX === keyX && playerY === keyY && !collectedKey) {
-        collectedKey = true;
-        keyX = -1; keyY = -1;
-        updateUI();
-        draw();
+        collectedKey = true; keyX = -1; keyY = -1;
+        updateUI(); draw();
     }
 }
 
 function checkGoal() {
     if (map[playerY][playerX] === "E") {
         if (stageNeedsKey && !collectedKey) return; 
-        gameOver = true;
-        document.getElementById("nextStage").style.display = "block";
+        gameOver = true; document.getElementById("nextStage").style.display = "block";
     }
 }
 
@@ -163,11 +190,9 @@ function movePlayer(dir) {
     if (dir === "left") nx--; if (dir === "right") nx++;
     if (map[ny] && map[ny][nx] !== "#") {
         playerX = nx; playerY = ny;
-        checkKey();
-        checkGoal();
+        checkKey(); checkGoal();
         if (!gameOver) moveSnakes();
-        draw();
-        checkSnake();
+        draw(); checkSnake();
     }
 }
 
@@ -210,14 +235,19 @@ function checkSnake() {
 function startGame() {
     document.getElementById("titleScreen").style.display = "none";
     document.getElementById("gameScreen").style.display = "block";
-    stage = 1; gameOver = false;
-    createMap();
+    stage = 1; gameOver = false; createMap();
 }
 
 function nextStage() {
     stage++;
     if (stage > 3) { alert("🎉 全ステージクリア！"); return; }
-    gameOver = false;
-    document.getElementById("nextStage").style.display = "none";
+    gameOver = false; document.getElementById("nextStage").style.display = "none";
     createMap();
 }
+
+document.addEventListener("keydown", function(e) {
+    if (e.key === "ArrowUp") movePlayer("up");
+    if (e.key === "ArrowDown") movePlayer("down");
+    if (e.key === "ArrowLeft") movePlayer("left");
+    if (e.key === "ArrowRight") movePlayer("right");
+});
