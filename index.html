@@ -2,48 +2,84 @@
 <html lang="ja">
 
 <head>
+
 <meta charset="UTF-8">
+
 <title>ヘビから逃げろ</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 
 <body>
 
+
 <div id="titleScreen">
 
-    <div class="snake">🐍</div>
+    <div class="snake">
+        🐍
+    </div>
 
-    <h1>ヘビから逃げろ</h1>
 
-    <p>by Snake Studio</p>
+    <h1>
+        ヘビから逃げろ
+    </h1>
+
+
+    <p>
+        Snake Studio
+    </p>
+
 
     <button onclick="startGame()">
         ▶ はじめる
     </button>
 
+
 </div>
+
+
 
 
 
 <div id="gameScreen">
 
-    <h2>STAGE 1</h2>
+
+    <h2>
+        STAGE 1
+    </h2>
+
 
     <div id="game"></div>
 
 
+
     <div id="controls">
 
-        <button onclick="movePlayer('up')">⬆️</button>
+
+        <button onclick="movePlayer('up')">
+            ⬆️
+        </button>
+
 
         <br>
 
-        <button onclick="movePlayer('left')">⬅️</button>
 
-        <button onclick="movePlayer('down')">⬇️</button>
+        <button onclick="movePlayer('left')">
+            ⬅️
+        </button>
 
-        <button onclick="movePlayer('right')">➡️</button>
+
+        <button onclick="movePlayer('down')">
+            ⬇️
+        </button>
+
+
+        <button onclick="movePlayer('right')">
+            ➡️
+        </button>
+
 
     </div>
 
@@ -52,7 +88,10 @@
 
 
 
+
+
 <script src="game.js"></script>
+
 
 </body>
 
