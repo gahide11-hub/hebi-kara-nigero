@@ -322,7 +322,112 @@ function createForestRoad(data){
 
 
         }
-   // =======================
+
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+// =======================
+// ゴール接続
+// =======================
+
+function makeGoalPath(gx,gy){
+
+
+    let x=playerX;
+
+    let y=playerY;
+
+
+
+    while(
+        x!==gx ||
+        y!==gy
+    ){
+
+
+        openCell(
+            x,
+            y
+        );
+
+
+
+        if(
+            Math.random()<0.5 &&
+            x!==gx
+        ){
+
+
+            x += x<gx ? 1:-1;
+
+
+        }
+        else if(y!==gy){
+
+
+            y += y<gy ? 1:-1;
+
+
+        }
+
+
+    }
+
+
+
+    openCell(
+        gx,
+        gy
+    );
+
+
+}
+
+
+
+
+
+
+// =======================
+// 道を開ける
+// =======================
+
+function openCell(x,y){
+
+
+    map[y]=replaceTile(
+        map[y],
+        x,
+        "."
+    );
+
+
+}
+
+
+
+
+
+function replaceTile(row,index,value){
+
+
+    return row.substring(0,index)
+    +value
+    +row.substring(index+1);
+
+
+}　
+// =======================
 // ヘビ配置
 // =======================
 
@@ -765,7 +870,7 @@ function moveSnake(snake){
 
 
 }
-  // =======================
+// =======================
 // ヘビ接触
 // =======================
 
@@ -938,4 +1043,4 @@ function(e){
     }
 
 
-});      
+});
