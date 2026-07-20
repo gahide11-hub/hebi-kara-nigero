@@ -53,3 +53,14 @@ button{
     font-size:25px;
 
 }
+#controls{
+    margin-top:20px;
+}
+
+#controls button{
+
+    font-size:30px;
+    margin:5px;
+    padding:10px 15px;
+
+}
