@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <title>Snake Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
     <!-- タイトル画面 -->
     <div id="titleScreen">
         <h1>🐍 Snake Studio</h1>
-        <p>森に迷い込んだ…</p>
-        <p>家に帰るため森を抜けよう！</p>
+        <p>森に迷い込んだ… 家に帰るため森を抜けよう！</p>
         <button onclick="startGame()">▶ はじめる</button>
     </div>
 
     <!-- ゲーム画面 -->
     <div id="gameScreen" style="display:none;">
-
         <h2>
             🌲 STAGE <span id="stageText">1</span>
-            <!-- ★ここを追加：鍵の状態が表示される場所です -->
+            <!-- 鍵の状態表示エリア -->
             <span id="keyDisplay" style="margin-left: 20px; font-size: 0.8em; color: #555;"></span>
         </h2>
 
@@ -30,8 +26,7 @@
 
         <!-- 操作ボタン -->
         <div id="controls">
-            <button onclick="movePlayer('up')">⬆️</button>
-            <br>
+            <button onclick="movePlayer('up')">⬆️</button><br>
             <button onclick="movePlayer('left')">⬅️</button>
             <button onclick="movePlayer('down')">⬇️</button>
             <button onclick="movePlayer('right')">➡️</button>
@@ -42,10 +37,8 @@
             <p>🎉 STAGE CLEAR!</p>
             <button onclick="nextStage()">次のステージへ</button>
         </div>
-
     </div>
 
     <script src="game.js"></script>
 </body>
-
 </html>
