@@ -59,26 +59,34 @@ button{
 
     width:40px;
     height:40px;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     font-size:25px;
 
 }
 
 
+/* スマホ操作ボタン */
 
 #controls{
 
-    margin-top:20px;
+    margin-top:25px;
 
 }
 
 
 #controls button{
 
-    font-size:30px;
-    margin:5px;
-    padding:10px 15px;
+    font-size:60px;
+
+    width:90px;
+    height:90px;
+
+    margin:10px;
+
+    border-radius:20px;
 
 }
