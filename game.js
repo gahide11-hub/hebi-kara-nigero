@@ -33,7 +33,9 @@ function updateUI() {
 function getStageData() {
     if (stage === 1) return { width: 12, height: 9, snakeCount: 1, density: 0.35, hasKey: false };
     if (stage === 2) return { width: 15, height: 11, snakeCount: 1, density: 0.4, hasKey: true };
-    return { width: 18, height: 13, snakeCount: 2, density: 0.45, hasKey: true };
+    if (stage === 3) return { width: 18, height: 13, snakeCount: 2, density: 0.45, hasKey: true };
+    // ステージ4（幅21、高さ15、ヘビ3匹、鍵あり）
+    return { width: 21, height: 15, snakeCount: 3, density: 0.48, hasKey: true };
 }
 
 // =======================
@@ -145,7 +147,7 @@ function draw() {
     // 画面横幅に合わせてマス目サイズ（cellSize）を動的に計算
     const availableWidth = Math.min(window.innerWidth - 20, 600); // 画面幅から余白を引く
     let cellSize = Math.floor(availableWidth / data.width) - 2;
-    cellSize = Math.min(Math.max(cellSize, 18), 40); // 18px〜40pxの範囲に収める
+    cellSize = Math.min(Math.max(cellSize, 16), 40); // 16px〜40pxの範囲に収める
     const fontSize = Math.floor(cellSize * 0.65); // アイコンサイズも自動縮小
 
     game.style.gridTemplateColumns = `repeat(${data.width}, ${cellSize}px)`;
@@ -243,7 +245,7 @@ function startGame() {
 
 function nextStage() {
     stage++;
-    if (stage > 3) { alert("🎉 全ステージクリア！"); return; }
+    if (stage > 4) { alert("🎉 全ステージクリア！おめでとうございます！"); return; }
     gameOver = false; document.getElementById("nextStage").style.display = "none";
     createMap();
 }
